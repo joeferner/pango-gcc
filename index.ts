@@ -1,0 +1,1 @@
+export {GccComponentOptions} from "./GccComponentOptions";
