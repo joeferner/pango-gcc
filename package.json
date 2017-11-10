@@ -1,5 +1,5 @@
 {
-  "name": "@pango/gcc",
+  "name": "pango-gcc",
   "version": "0.0.1",
   "description": "Pango component to run gcc",
   "main": "dist/index.js",
@@ -15,8 +15,8 @@
   },
   "peerDependencies": {
     "pango": "0.0.1",
-    "@pango/components": "0.0.1",
-    "@pango/menuconfig": "0.0.1"
+    "pango-components": "0.0.1",
+    "pango-menuconfig": "0.0.1"
   },
   "dependencies": {
     "@types/fs-extra": "^4.0.3",

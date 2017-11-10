@@ -1,6 +1,6 @@
 import {BuildTarget} from "./BuildTarget";
 import {ProjectOptions} from "pango";
-import {ComponentWithMenuConfig, MenuConfigContext} from "@pango/menuconfig";
+import {ComponentWithMenuConfig, MenuConfigContext} from "pango-menuconfig";
 import {GccComponentOptions} from "./GccComponentOptions";
 
 export const COMPONENT_NAME = 'gcc';
