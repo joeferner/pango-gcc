@@ -71,8 +71,8 @@ export class CompileTask extends Task {
         ];
         for (let componentName of Object.keys(projectOptions.components)) {
             const component = projectOptions.components[componentName];
-            tasks.push(this.resolveAllSourceFiles(projectOptions, component.componentDir, component.sourceFiles));
-            tasks.push(this.getAllSourcesInDirs(projectOptions, component.componentDir, component.sourceDirs));
+            tasks.push(this.resolveAllSourceFiles(projectOptions, component.componentDir, component.sourceFiles || []));
+            tasks.push(this.getAllSourcesInDirs(projectOptions, component.componentDir, component.sourceDirs || []));
         }
         return Promise.all(tasks)
             .then(results => {

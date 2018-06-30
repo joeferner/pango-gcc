@@ -4,23 +4,19 @@ import {GccComponentOptions} from "./GccComponentOptions";
 import * as path from "path";
 
 export class LinkTask extends Task {
-    run(taskOptions: TaskOptions): Promise<void> {
+    async run(taskOptions: TaskOptions): Promise<void> {
         const component: GccComponentOptions = taskOptions.projectOptions.components[COMPONENT_NAME];
         const linker = component.linker || BuildComponent.getDefaultLinker();
-        const outputFile = component.outputFile || path.join(taskOptions.projectOptions.buildDir, 'a.out');
+        const outputFile = component.outputFile || path.join(taskOptions.projectOptions.buildDir, component.outputFileName || 'a.out');
         component.outputFile = outputFile;
-        return FileUtils.isOutputFileOlderThenInputFiles(outputFile, component.allObjectFiles)
-            .then(shouldRun => {
-                if (shouldRun) {
-                    const cmd = [
-                        linker,
-                    ].concat(this.getLinkerOptions(component, outputFile));
-                    taskOptions.log.info(cmd.join(' '));
-                    return this.shell(taskOptions, cmd)
-                        .then(() => {
-                        });
-                }
-            });
+        const shouldRun = await FileUtils.isOutputFileOlderThenInputFiles(outputFile, component.allObjectFiles);
+        if (shouldRun) {
+            const cmd = [
+                linker,
+            ].concat(this.getLinkerOptions(component, outputFile));
+            taskOptions.log.info(cmd.join(' '));
+            await this.shell(taskOptions, cmd);
+        }
     }
 
     private getLinkerOptions(component: GccComponentOptions, outputFile: string): string[] {

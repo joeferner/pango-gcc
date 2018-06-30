@@ -5,6 +5,7 @@ export interface GccComponentOptions extends ComponentOptions {
     compilers?: { [extName: string]: string };
     allObjectFiles?: string[];
     outputFile?: string;
+    outputFileName?: string;
     allIncludeDirs?: string[];
     compilerOptions: string[];
 }
