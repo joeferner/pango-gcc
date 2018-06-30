@@ -1,4 +1,4 @@
-import {Task, TaskOptions} from "pango";
+import {FileUtils, Task, TaskOptions} from "pango";
 import {BuildComponent, COMPONENT_NAME} from "./BuildComponent";
 import {GccComponentOptions} from "./GccComponentOptions";
 import * as path from "path";
@@ -9,12 +9,17 @@ export class LinkTask extends Task {
         const linker = component.linker || BuildComponent.getDefaultLinker();
         const outputFile = component.outputFile || path.join(taskOptions.projectOptions.buildDir, 'a.out');
         component.outputFile = outputFile;
-        const cmd = [
-            linker,
-        ].concat(this.getLinkerOptions(component, outputFile));
-        taskOptions.log.info(cmd.join(' '));
-        return this.shell(taskOptions, cmd)
-            .then(() => {
+        return FileUtils.isOutputFileOlderThenInputFiles(outputFile, component.allObjectFiles)
+            .then(shouldRun => {
+                if (shouldRun) {
+                    const cmd = [
+                        linker,
+                    ].concat(this.getLinkerOptions(component, outputFile));
+                    taskOptions.log.info(cmd.join(' '));
+                    return this.shell(taskOptions, cmd)
+                        .then(() => {
+                        });
+                }
             });
     }
 

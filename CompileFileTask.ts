@@ -1,4 +1,4 @@
-import {ProjectOptions, Task, TaskOptions} from "pango";
+import {FileUtils, ProjectOptions, Task, TaskOptions} from "pango";
 import * as path from "path";
 import * as fs from "fs-extra";
 import {COMPONENT_NAME} from "./BuildComponent";
@@ -48,19 +48,7 @@ export class CompileFileTask extends Task {
     }
 
     private shouldExecute(taskOptions: TaskOptions): Promise<boolean> {
-        return fs.pathExists(this.source.outputPath)
-            .then(exists => {
-                if (!exists) {
-                    return true;
-                }
-
-                return Promise.all([
-                    this.getInputModifiedTime(taskOptions),
-                    this.getOutputModifiedTime()
-                ]).then(results => {
-                    return results[0] > results[1];
-                });
-            });
+        return FileUtils.isOutputFileOlderThenInputFiles(this.source.outputPath, this.getInputFiles());
     }
 
     private getCompilerOptions(componentOptions: GccComponentOptions): string[] {
@@ -81,39 +69,10 @@ export class CompileFileTask extends Task {
         return ['link'];
     }
 
-    private getInputModifiedTime(taskOptions: TaskOptions): Promise<number> {
-        return this.getInputFiles()
-            .then(files => {
-                if (files.length === 0) {
-                    return Number.MAX_SAFE_INTEGER;
-                }
-                return Promise.all(files.map(file => {
-                    return fs.pathExists(file)
-                        .then(exists => {
-                            if (!exists) {
-                                taskOptions.log.debug(`Could not find input file: ${file}`);
-                                return null;
-                            }
-                            return fs.stat(file);
-                        });
-                })).then(results => {
-                    return results
-                        .map(item => item ? item.mtimeMs : Number.MAX_SAFE_INTEGER)
-                        .reduce((lastResult, currentValue) => {
-                            return Math.max(lastResult, currentValue);
-                        }, 0);
-                });
-            });
-    }
-
-    private getOutputModifiedTime(): Promise<number> {
-        return fs.stat(this.source.outputPath)
-            .then(stat => {
-                return stat.mtimeMs;
-            });
-    }
-
     private getInputFiles(): Promise<string[]> {
+        if (this.source.filePath.match(/\.s|\.S$/)) {
+            return Promise.resolve([this.source.filePath]);
+        }
         return fs.pathExists(this.source.depPath)
             .then(exists => {
                 if (!exists) {
