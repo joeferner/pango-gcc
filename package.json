@@ -1,27 +1,27 @@
 {
   "name": "pango-gcc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Pango component to run gcc",
   "main": "dist/index.js",
   "author": "Joe Ferner <joe@fernsroth.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joeferner/pango-gcc.git"
+  },
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "tsc",
+    "prepare": "tsc",
     "watch": "tsc --watch"
   },
   "devDependencies": {
-    "typescript": "^2.5.3"
-  },
-  "peerDependencies": {
-    "pango": "0.0.1",
-    "pango-components": "0.0.1",
-    "pango-menuconfig": "0.0.1"
+    "typescript": "^2.9.2"
   },
   "dependencies": {
     "@types/fs-extra": "^4.0.3",
     "fs-extra": "^4.0.2",
     "glob": "^7.1.2",
-    "glob-promise": "^3.3.0"
+    "glob-promise": "^3.3.0",
+    "nested-error-stacks": "^2.0.0",
+    "pango": "0.0.x"
   }
 }
