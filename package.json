@@ -22,6 +22,6 @@
     "glob": "^7.1.2",
     "glob-promise": "^3.3.0",
     "nested-error-stacks": "^2.0.0",
-    "pango": "0.0.x"
+    "pango": "../pango"
   }
 }
