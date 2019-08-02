@@ -2,6 +2,7 @@ const pangoGcc = require('.');
 
 module.exports = {
     targets: {
+        'gcc-initialize': new pangoGcc.GccInitializeTarget(),
         'generate-sources': {
             preRequisites: ['initialize']
         },
